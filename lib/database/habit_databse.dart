@@ -41,7 +41,7 @@ class HabitDatabase extends ChangeNotifier {
   final List<Habit> currentHabbits = [];
 
   //  CREATE - add a new habbits
-  Future<void> newHabbit(String habitName) async{
+  Future<void> addHabbit(String habitName) async{
 
     //  create the new habbit
     final newHabit = Habit()..name = habitName;
