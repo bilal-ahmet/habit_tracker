@@ -3,6 +3,7 @@ import 'package:habit_tracker/database/habit_databse.dart';
 import 'package:habit_tracker/models/habit.dart';
 import 'package:habit_tracker/util/habit_util.dart';
 import 'package:habit_tracker/widgets/my_drawer.dart';
+import 'package:habit_tracker/widgets/my_habit_tile.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -59,6 +60,15 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  //  chech habit on & off
+  void chechHabitOnOff(bool? value, Habit habit){
+
+    //  update habit completion status
+    if(value != null){
+      context.read<HabitDatabase>().updateHabitCompletion(habit.id, value);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -93,9 +103,7 @@ class _HomePageState extends State<HomePage> {
       bool isCompletedToday = isHabitCompletedToday(habit.completedDays);
 
       //  return habit tile UI
-      return ListTile(
-        title: Text(habit.name),
-      );
+      return MyHabitTile(isCompleted: isCompletedToday, text: habit.name, onChanged: (value) => chechHabitOnOff(value, habit),);
     },);
   }
 }
