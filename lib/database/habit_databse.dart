@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:habit_tracker/models/app_settings.dart';
 import 'package:habit_tracker/models/habit.dart';
 import 'package:isar/isar.dart';

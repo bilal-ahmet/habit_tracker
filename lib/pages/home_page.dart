@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/database/habit_databse.dart';
 import 'package:habit_tracker/models/habit.dart';
+import 'package:habit_tracker/util/habit_util.dart';
 import 'package:habit_tracker/widgets/my_drawer.dart';
 import 'package:provider/provider.dart';
 
@@ -63,13 +64,14 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(),
-      drawer: MyDrawer(),
+      drawer: const MyDrawer(),
       floatingActionButton: FloatingActionButton(
         onPressed: createNewHabit,
         elevation: 0,
         backgroundColor: Theme.of(context).colorScheme.tertiary,
         child: const Icon(Icons.add),
       ),
+      body: buildHabitList(),
     );
   }
 
@@ -88,9 +90,12 @@ class _HomePageState extends State<HomePage> {
       final habit = currentHabits[index];
 
       //  chech if the habit is completed today
-      bool isCompletedToday = isHabitCompletedToday();
+      bool isCompletedToday = isHabitCompletedToday(habit.completedDays);
 
       //  return habit tile UI
+      return ListTile(
+        title: Text(habit.name),
+      );
     },);
   }
 }
