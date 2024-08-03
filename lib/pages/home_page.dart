@@ -4,6 +4,7 @@ import 'package:habit_tracker/models/habit.dart';
 import 'package:habit_tracker/util/habit_util.dart';
 import 'package:habit_tracker/widgets/my_drawer.dart';
 import 'package:habit_tracker/widgets/my_habit_tile.dart';
+import 'package:habit_tracker/widgets/my_heat_map.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -153,7 +154,16 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Theme.of(context).colorScheme.tertiary,
         child: const Icon(Icons.add),
       ),
-      body: buildHabitList(),
+      body: ListView(
+        children: [
+
+          //  HEATMAP
+          buildHeatMap(),
+
+          //  HABIT LIST
+          buildHabitList()
+        ],
+      ),
     );
   }
 
@@ -167,6 +177,8 @@ class _HomePageState extends State<HomePage> {
     //  return list of habit UI
     return ListView.builder(
       itemCount: currentHabits.length,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
         //  get each individual habit
         final habit = currentHabits[index];
@@ -184,5 +196,30 @@ class _HomePageState extends State<HomePage> {
         );
       },
     );
+  }
+
+  Widget buildHeatMap(){
+    
+    //  habit database
+    final habitDatabase = context.watch<HabitDatabase>();
+
+    //  current habit
+    List<Habit> currentHabbits = habitDatabase.currentHabbits;
+
+    //  return heat map
+    return FutureBuilder(future: habitDatabase.getFirstLaunchDate(), builder: (context, snapshot) {
+      
+      //  once the data is available -> build heatmap
+      if(snapshot.hasData){
+        return MyHeatMap(startDate: snapshot.data!, datasets: prepHeatMapDataSet(currentHabbits));
+      }
+
+      //  handle case wwhere no data is returned
+      else{
+        return Container();
+      }
+    },);
+
+  
   }
 }
