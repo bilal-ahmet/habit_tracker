@@ -14,7 +14,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
   @override
   void initState() {
     super.initState();
@@ -61,19 +60,92 @@ class _HomePageState extends State<HomePage> {
   }
 
   //  chech habit on & off
-  void chechHabitOnOff(bool? value, Habit habit){
-
+  void chechHabitOnOff(bool? value, Habit habit) {
     //  update habit completion status
-    if(value != null){
+    if (value != null) {
       context.read<HabitDatabase>().updateHabitCompletion(habit.id, value);
     }
+  }
+
+  //  edit habit box
+  void editHabitBox(Habit habit) {
+    //  set the controller's text to the habit's current name
+    textController.text = habit.name;
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        content: TextField(
+          controller: textController,
+        ),
+        actions: [
+          MaterialButton(
+            onPressed: () {
+              //  get the new habit name
+              String newHabitName = textController.text;
+
+              // save to db
+              context
+                  .read<HabitDatabase>()
+                  .updateHabitName(habit.id, newHabitName);
+
+              Navigator.pop(context);
+              textController.clear();
+            },
+            child: const Text("Save"),
+          ),
+          MaterialButton(
+            onPressed: () {
+              Navigator.pop(context);
+              textController.clear();
+            },
+            child: const Text("Cancel"),
+          )
+        ],
+      ),
+    );
+  }
+
+  //  delete habit box
+  void deleteHabitBox(Habit habit) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        content: const Text("Are you sure you want to delete"),
+        actions: [
+          MaterialButton(
+            onPressed: () {
+              //  delete button
+
+              // save to db
+              context
+                  .read<HabitDatabase>()
+                  .deleteHabit(habit.id);
+
+              Navigator.pop(context);
+            },
+            child: const Text("delete"),
+          ),
+          MaterialButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text("Cancel"),
+          )
+        ],
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
-      appBar: AppBar(),
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        foregroundColor: Theme.of(context).colorScheme.inversePrimary,
+      ),
       drawer: const MyDrawer(),
       floatingActionButton: FloatingActionButton(
         onPressed: createNewHabit,
@@ -85,8 +157,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget buildHabitList(){
-    
+  Widget buildHabitList() {
     //  habit db
     final habitDatabase = context.watch<HabitDatabase>();
 
@@ -94,16 +165,24 @@ class _HomePageState extends State<HomePage> {
     List<Habit> currentHabits = habitDatabase.currentHabbits;
 
     //  return list of habit UI
-    return ListView.builder(itemCount: currentHabits.length, itemBuilder: (context, index) {
-      
-      //  get each individual habit
-      final habit = currentHabits[index];
+    return ListView.builder(
+      itemCount: currentHabits.length,
+      itemBuilder: (context, index) {
+        //  get each individual habit
+        final habit = currentHabits[index];
 
-      //  chech if the habit is completed today
-      bool isCompletedToday = isHabitCompletedToday(habit.completedDays);
+        //  chech if the habit is completed today
+        bool isCompletedToday = isHabitCompletedToday(habit.completedDays);
 
-      //  return habit tile UI
-      return MyHabitTile(isCompleted: isCompletedToday, text: habit.name, onChanged: (value) => chechHabitOnOff(value, habit),);
-    },);
+        //  return habit tile UI
+        return MyHabitTile(
+          isCompleted: isCompletedToday,
+          text: habit.name,
+          onChanged: (value) => chechHabitOnOff(value, habit),
+          editHabit: (context) => editHabitBox(habit),
+          deleteHabit: (context) => deleteHabitBox(habit),
+        );
+      },
+    );
   }
 }
