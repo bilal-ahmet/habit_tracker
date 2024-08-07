@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:habit_tracker/models/app_settings.dart';
 import 'package:habit_tracker/models/habit.dart';
 import 'package:isar/isar.dart';
@@ -7,9 +8,7 @@ import 'package:path_provider/path_provider.dart';
 class HabitDatabase extends ChangeNotifier {
   static late Isar isar;
 
-  /*
-  SETUP
-  */
+  /*   SETUP   */
 
   //  INITIALIZE - DATABASE
   static Future<void> initialize() async{
@@ -32,12 +31,10 @@ class HabitDatabase extends ChangeNotifier {
     return settings?.firstLaunchDate;
   }
 
-  /*
-  CRUD X OPERATIONS
-  */
+  /*   CRUD X OPERATIONS   */
 
   //  List of habits
-  final List<Habit> currentHabbits = [];
+  final List<Habit> currentHabits = [];
 
   //  CREATE - add a new habbits
   Future<void> addHabbit(String habitName) async{
@@ -59,8 +56,8 @@ class HabitDatabase extends ChangeNotifier {
     List<Habit> fetchedHabits = await isar.habits.where().findAll();
 
     //  give to current habbit
-    currentHabbits.clear();
-    currentHabbits.addAll(fetchedHabits);
+    currentHabits.clear();
+    currentHabits.addAll(fetchedHabits);
 
     //  update UI
     notifyListeners();

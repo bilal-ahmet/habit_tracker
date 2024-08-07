@@ -10,13 +10,13 @@ class MyHeatMap extends StatelessWidget {
   Widget build(BuildContext context) {
     return HeatMap(
       startDate: startDate,
-      endDate: DateTime.now(),
+      endDate: DateTime.now().add(const Duration(days: 55)),
       datasets: datasets,
       colorMode: ColorMode.color,
       defaultColor: Theme.of(context).colorScheme.secondary,
-      textColor: Colors.white,
+      textColor: Colors.grey,
       showColorTip: false,
-      showText: false,
+      showText: true,
       scrollable: true,
       size: 30,
       colorsets: {
@@ -25,6 +25,9 @@ class MyHeatMap extends StatelessWidget {
         3: Colors.green.shade400,
         4: Colors.green.shade500,
         5: Colors.green.shade600,
+        6: Colors.green.shade700,
+        7: Colors.green.shade800,
+        8: Colors.green.shade900,
       },
     );
   }

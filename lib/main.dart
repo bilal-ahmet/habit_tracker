@@ -9,7 +9,7 @@ void main() async {
 
   //  initialize database
   await HabitDatabase.initialize();
-  await HabitDatabase().saveFirstLaunchDate();
+  await HabitDatabase().saveFirstLaunchDate(); 
 
   runApp(MultiProvider(
     providers: [
@@ -19,7 +19,7 @@ void main() async {
       //  theme provider
       ChangeNotifierProvider(create: (context) => ThemeProvider()),
     ],
-    child: const HomePage(),
+    child: const MyApp(),
   ));
 }
 

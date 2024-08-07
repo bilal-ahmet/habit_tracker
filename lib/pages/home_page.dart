@@ -17,10 +17,11 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   void initState() {
-    super.initState();
 
     // read exisiting habits on app startup
     Provider.of<HabitDatabase>(context, listen: false).readHabits();
+
+    super.initState();
   }
 
   final TextEditingController textController = TextEditingController();
@@ -151,7 +152,7 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: createNewHabit,
         elevation: 0,
-        backgroundColor: Theme.of(context).colorScheme.tertiary,
+        backgroundColor: Theme.of(context).colorScheme.primary,
         child: const Icon(Icons.add),
       ),
       body: ListView(
@@ -172,7 +173,7 @@ class _HomePageState extends State<HomePage> {
     final habitDatabase = context.watch<HabitDatabase>();
 
     //  current habit
-    List<Habit> currentHabits = habitDatabase.currentHabbits;
+    List<Habit> currentHabits = habitDatabase.currentHabits;
 
     //  return list of habit UI
     return ListView.builder(
@@ -204,14 +205,14 @@ class _HomePageState extends State<HomePage> {
     final habitDatabase = context.watch<HabitDatabase>();
 
     //  current habit
-    List<Habit> currentHabbits = habitDatabase.currentHabbits;
+    List<Habit> currentHabits = habitDatabase.currentHabits;
 
     //  return heat map
-    return FutureBuilder(future: habitDatabase.getFirstLaunchDate(), builder: (context, snapshot) {
+    return FutureBuilder<DateTime?>(future: habitDatabase.getFirstLaunchDate(), builder: (context, snapshot) {
       
       //  once the data is available -> build heatmap
       if(snapshot.hasData){
-        return MyHeatMap(startDate: snapshot.data!, datasets: prepHeatMapDataSet(currentHabbits));
+        return MyHeatMap(startDate: snapshot.data!, datasets: prepHeatMapDataSet(currentHabits));
       }
 
       //  handle case wwhere no data is returned
